@@ -27,5 +27,18 @@ router.get('/', (req, res) => {
     })
 })
 
+// POST: /api/artists => try to create new artist & return either 400 Bad Request or 201 Resource Created
+router.post('/', (req, res) => {
+    Artist.create(req.body, (err, artist) => {
+        if (err) {
+            console.log(err)
+            res.json(err).status(400)
+        }
+        else {
+            res.json(artist).status(201)
+        }
+    })
+})
+
 // make public
 module.exports = router
