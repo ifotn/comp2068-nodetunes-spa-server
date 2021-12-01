@@ -40,5 +40,19 @@ router.post('/', (req, res) => {
     })
 })
 
+// DELETE: /api/artists/abc123 => try to delete selected artist and return either 400 or 204 Resource Modified
+router.delete('/:_id', (req, res) => {
+    Artist.remove({ _id: req.params._id }, (err, artist) => {
+        if (err) {
+            console.log(err)
+            res.json(err).status(400)
+        }
+        else {
+            res.json(artist).status(204)
+        }
+    })
+})
+
+
 // make public
 module.exports = router
