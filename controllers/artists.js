@@ -40,7 +40,7 @@ router.post('/', (req, res) => {
     })
 })
 
-// DELETE: /api/artists/abc123 => try to delete selected artist and return either 400 or 204 Resource Modified
+// DELETE: /api/artists/abc123 => try to delete selected artist and return either 400 or 204 No Content
 router.delete('/:_id', (req, res) => {
     Artist.remove({ _id: req.params._id }, (err, artist) => {
         if (err) {
@@ -49,6 +49,44 @@ router.delete('/:_id', (req, res) => {
         }
         else {
             res.json(artist).status(204)
+        }
+    })
+})
+
+// PUT: /api/artists/abc123 => update returns 400 Bad Request or 202 Accepted
+router.put('/:_id', (req, res) => {
+    Artist.findByIdAndUpdate({ _id: req.params._id }, req.body, (err, artist) => {
+        if (err) {
+            console.log(err)
+            res.json(err).status(400)
+        }
+        else {
+            res.json(artist).status(202)
+        }
+    })
+})
+
+// POST /api/artists/add-album/abc123
+router.post('/add-album/:_id', (req, res) => {
+    // get selected artist
+    Artist.findById({ _id: req.params._id }, (err, artist) => {
+        if (err) {
+            res.json(err).status(400)
+        }
+        else {
+            artist.albums.push({
+                title: req.body.title,
+                year: req.body.year,
+                rating: req.body.rating
+            })
+            artist.save((err, artist) => {
+                if (err) {
+                    res.json(err).status(400)
+                }
+                else {
+                    res.json(artist).status(201)
+                }
+            })
         }
     })
 })
