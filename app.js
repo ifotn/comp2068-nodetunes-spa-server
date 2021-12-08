@@ -30,7 +30,12 @@ app.use('/api/artists', artistsController)
 // mongodb connection w/mongoose
 const mongoose = require('mongoose')
 
-mongoose.connect(globals.db, {
+// if in dev mode, use our .env file for config vars
+if (process.env.NODE_ENV !== 'production') {
+    require('dotenv').config()
+}
+
+mongoose.connect(process.env.DATABASE_URL, {
   useNewUrlParser: true,
   useUnifiedTopology: true
 }).then(
